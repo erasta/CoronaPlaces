@@ -10,5 +10,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 fetch(url)
     .then((response) => response.json())
     .then((json) => {
-        L.geoJSON(json, {}).addTo(map);
+        var markers = L.markerClusterGroup({ chunkedLoading: true });
+        json.features.forEach(loc => {
+            var title = loc.properties.Place;
+            const coord = loc.geometry.coordinates;
+            const pos = L.latLng(coord[1], coord[0]);
+            const marker = L.marker(pos, { title: title });
+            marker.bindPopup(title);
+            markers.addLayer(marker);
+        });
+        map.addLayer(markers);
     });
