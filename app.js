@@ -10,12 +10,28 @@ class App {
         return text;
     }
 
+    filterByTime() {
+        if (!this.firstTime || !this.lastTime) return;
+        const curr = parseFloat(document.getElementById("slider").value);
+        const currTime = this.firstTime + curr * (this.lastTime - this.firstTime);
+        document.getElementById("date-to-show").textContent = new Date(currTime).toLocaleString('he-IL');
+        this.markerCluster.clearLayers();
+        this.markers.filter(m => m.fromTime <= currTime && m.toTime >= currTime).forEach(marker => {
+            this.markerCluster.addLayer(marker);
+        });
+
+    }
+
     processJson(json) {
         this.markers = json.features.map(loc => {
             const prop = loc.properties;
+            this.firstTime = this.firstTime === undefined ? prop.fromTime : Math.min(this.firstTime, prop.fromTime);
+            this.lastTime = this.lastTime === undefined ? prop.toTime : Math.max(this.lastTime, prop.toTime);
             const coord = loc.geometry.coordinates;
             const pos = L.latLng(coord[1], coord[0]);
             const marker = L.marker(pos, { title: this.propToText(prop, "\n") });
+            marker.fromTime = prop.fromTime;
+            marker.toTime = prop.toTime;
             marker.bindPopup(this.propToText(prop));
             return marker;
         });
@@ -24,11 +40,12 @@ class App {
             this.markerCluster.addLayer(marker);
         });
         this.map.addLayer(this.markerCluster);
+        document.getElementById("slider").addEventListener("input", () => this.filterByTime());
     }
 
     constructor() {
         const url = `https://services5.arcgis.com/dlrDjz89gx9qyfev/ArcGIS/rest/services/Corona_Exposure_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=`;
-        this.map = L.map('mapid').setView([32.0813262, 34.7775611], 15);
+        this.map = L.map('mapid').setView([32.0813262, 34.7775611], 9);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
