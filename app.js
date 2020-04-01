@@ -33,9 +33,23 @@ class App {
 
     processDuration(duration) {
         return {
-            start: new Date(parseFloat(duration.startTimestampMs)),
-            end: new Date(parseFloat(duration.endTimestampMs))
+            fromTime: new Date(parseFloat(duration.startTimestampMs)),
+            toTime: new Date(parseFloat(duration.endTimestampMs))
         };
+    }
+    isDateBetween(check, from, to) {
+        return check >= from && check <= to;
+    }
+    isDurationOverlap(one, two) {
+        return this.isDateBetween(one.fromTime, two.fromTime, two.toTime) || this.isDateBetween(two.fromTime, one.fromTime, one.toTime + 1000 * 60 * 15);
+    }
+    checkLocation(myLocation) {
+        const problem = this.markers.find(m => {
+            return this.isDurationOverlap(m, myLocation.duration) && m.getLatLng().distanceTo(myLocation.start) < 100;
+        });
+        if (problem) {
+            L.circleMarker(problem.getLatLng(), { color: 'red', radius: 20 }).addTo(this.map);
+        }
     }
     processGoogleHistory(event) {
         event.target.files[0].text().then(text => {
@@ -56,9 +70,10 @@ class App {
             });
             places.forEach(place => {
                 if (place.end) {
-                    L.polyline([place.start, place.end], {color: 'blue'}).addTo(this.map);
+                    L.polyline([place.start, place.end], { color: 'blue' }).addTo(this.map);
                 } else {
                     L.circleMarker(place.start).addTo(this.map);
+                    this.checkLocation(place);
                 }
             })
         });
