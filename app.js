@@ -55,9 +55,10 @@ class App {
                 }
             });
             places.forEach(place => {
-                L.marker(place.start).addTo(this.map);
-                if (places.end) {
-                    L.marker(place.end).addTo(this.map);
+                if (place.end) {
+                    L.polyline([place.start, place.end], {color: 'blue'}).addTo(this.map);
+                } else {
+                    L.circleMarker(place.start).addTo(this.map);
                 }
             })
         });
