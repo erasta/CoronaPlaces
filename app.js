@@ -1,6 +1,7 @@
 'use strict';
 
 import { downloadSingleKml } from './kml.js';
+import { lerpPos } from './utils.js';
 
 class App {
     propToText(prop, sep) {
@@ -43,13 +44,30 @@ class App {
     isDurationOverlap(one, two) {
         return this.isDateBetween(one.fromTime, two.fromTime, two.toTime) || this.isDateBetween(two.fromTime, one.fromTime, one.toTime + 1000 * 60 * 15);
     }
+
     checkLocation(myLocation) {
-        const problem = this.markers.find(m => {
-            return this.isDurationOverlap(m, myLocation.duration) && m.getLatLng().distanceTo(myLocation.start) < 100;
-        });
-        if (problem) {
-            L.circleMarker(problem.getLatLng(), { color: 'red', radius: 20 }).addTo(this.map);
+        const loc = [myLocation.start]
+        if (myLocation.end) {
+            loc.push(myLocation.end);
+            const span = myLocation.start.distanceTo(myLocation.end);
+            const time = (myLocation.duration.toTime - myLocation.duration.fromTime) / 1000;
+            const speed = span / time;
+            if (span < 1000 && speed < 10) {
+                const samples = Math.ceil(span / 50);
+                for (let i = 1; i < samples; ++i) {
+                    loc.push(lerpPos(myLocation.start, myLocation.end, i / samples));
+                }
+            }
         }
+        const problems = this.markers.filter(m => {
+            if (!this.isDurationOverlap(m, myLocation.duration)) {
+                return false;
+            }
+            return loc.find(l => m.getLatLng().distanceTo(l) < 100);
+        });
+        problems.forEach(problem => {
+            L.circleMarker(problem.getLatLng(), { color: 'red', radius: 20 }).addTo(this.map);
+        });
     }
     processGoogleHistory(event) {
         event.target.files[0].text().then(text => {
@@ -73,8 +91,8 @@ class App {
                     L.polyline([place.start, place.end], { color: 'blue' }).addTo(this.map);
                 } else {
                     L.circleMarker(place.start).addTo(this.map);
-                    this.checkLocation(place);
                 }
+                this.checkLocation(place);
             })
         });
     }
