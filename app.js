@@ -67,10 +67,12 @@ class App {
         });
         problems.forEach(problem => {
             L.circleMarker(problem.getLatLng(), { color: 'red', radius: 20 }).addTo(this.map);
+            this.wasProblem = true;
         });
     }
     processGoogleHistory(event) {
         if (event.target.files.length === 0) return;
+        this.wasProblem = false;
         event.target.files[0].text().then(text => {
             const json = JSON.parse(text);
             const places = json.timelineObjects.map(obj => {
@@ -96,6 +98,9 @@ class App {
                 this.checkLocation(place);
             })
         });
+        const eprob = document.getElementById('was-problem');
+        eprob.style.color = this.wasProblem ? 'red' : 'green';
+        eprob.textContent = this.wasProblem ? 'זוהתה חשיפות אפשריות, הן מסומנות בעיגול אדום על המפה' : 'הכל בסדר, לא זוהו חשיפות';
     }
 
     processJson(json) {
