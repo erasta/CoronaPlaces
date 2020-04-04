@@ -137,7 +137,7 @@ class App {
         // document.getElementById("download-my-locations").addEventListener("click", () => downloadSingleKml());
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors<br><a href="https://github.com/erasta/CoronaPlaces">Opensource code</a> by Eran Geva'
         }).addTo(this.map);
 
         fetch(url)
