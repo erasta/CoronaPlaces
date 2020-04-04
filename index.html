@@ -2,6 +2,10 @@
 <html>
 
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123138137-8"></script>
+    <script>  window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'UA-123138137-8');</script>
+
     <title>האם נחשפתי לקורונה?</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +34,8 @@
         <label for="file-google-json">העלו קובץ היסטורית מיקומים: </label>
         <input type="file" id="file-google-json" name="file-google-json" accept=".json" />
         <br>
-        <button onclick="st = document.getElementById('instructions').style; st.display = st.display === 'none' ? '' : 'none'">
+        <button
+            onclick="st = document.getElementById('instructions').style; st.display = st.display === 'none' ? '' : 'none'">
             איך מוציאים את היסטוריית המיקומים?
         </button>
     </div>
