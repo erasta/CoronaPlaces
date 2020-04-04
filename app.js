@@ -52,7 +52,7 @@ class App {
             const span = myLocation.start.distanceTo(myLocation.end);
             const time = (myLocation.duration.toTime - myLocation.duration.fromTime) / 1000;
             const speed = span / time;
-            if (span < 1000 && speed < 10) {
+            if (speed < 10) {
                 const samples = Math.ceil(span / 50);
                 for (let i = 1; i < samples; ++i) {
                     loc.push(lerpPos(myLocation.start, myLocation.end, i / samples));
@@ -70,6 +70,7 @@ class App {
         });
     }
     processGoogleHistory(event) {
+        if (event.target.files.length === 0) return;
         event.target.files[0].text().then(text => {
             const json = JSON.parse(text);
             const places = json.timelineObjects.map(obj => {
@@ -88,9 +89,9 @@ class App {
             });
             places.forEach(place => {
                 if (place.end) {
-                    L.polyline([place.start, place.end], { color: 'blue' }).addTo(this.map);
+                    L.polyline([place.start, place.end], { color: 'green' }).addTo(this.map);
                 } else {
-                    L.circleMarker(place.start).addTo(this.map);
+                    L.circleMarker(place.start, { color: 'green' }).addTo(this.map);
                 }
                 this.checkLocation(place);
             })
@@ -104,12 +105,17 @@ class App {
             this.lastTime = this.lastTime === undefined ? prop.toTime : Math.max(this.lastTime, prop.toTime);
             const coord = loc.geometry.coordinates;
             const pos = L.latLng(coord[1], coord[0]);
-            const marker = L.marker(pos, { title: this.propToText(prop, "\n") });
+            const marker = L.circleMarker(pos, { title: this.propToText(prop, "\n") });
             marker.fromTime = prop.fromTime;
             marker.toTime = prop.toTime;
             marker.bindPopup(this.propToText(prop));
             return marker;
         });
+
+        const firstTime = new Date(this.firstTime).toLocaleString('he-IL');
+        const lastTime = new Date(this.lastTime).toLocaleString('he-IL');
+        document.getElementById("date-to-show").textContent = firstTime + " - " + lastTime;
+
         this.markerCluster = L.markerClusterGroup({ chunkedLoading: true });
         this.markers.forEach(marker => {
             this.markerCluster.addLayer(marker);

@@ -19,15 +19,24 @@
 </head>
 
 <body style="width: 100%;height: 100vh;margin: 0px;">
-    <div id="mapid" style="width: 100%; height: 100%;"></div>
-    <div style="position: absolute; z-index: 9999; width: 50%; height: 10%; bottom: 5%; background-color: white;">
-        <div style="height: 20px;">
-            <label id="date-to-show"></label>
-        </div><br>
-        <input id="slider" type="range" min="0" max="1" step="0.001" value="0" style="width: 99%; margin: 5px;" />
-        <!-- <button id="download-my-locations">הורד את המיקומים שלי מגוגל</button> -->
+    <h1 dir="rtl" style="text-align: center;">האם נחשפתי לקורונה?</h1>
+    <div dir="rtl">
+        <label>סנן מיקומים מאומתים לפי תאריך: </label>
+        <input id="slider" type="range" min="0" max="1" step="0.001" value="0" />
+        <label id="date-to-show">טוען</label>
+        <br>
+        <label for="file-google-json">העלו קובץ היסטורית מיקומים: </label>
         <input type="file" id="file-google-json" name="file-google-json" accept=".json" />
+        <br>
+        <button onclick="st = document.getElementById('instructions').style; st.display = st.display === 'none' ? '' : 'none'">
+            איך מוציאים את היסטוריית המיקומים?
+        </button>
     </div>
+    <div id="mapid" style="width: 100%; height: 100%;"></div>
+    <iframe id="instructions"
+        style="position: absolute; top: 25%; right: 25%; width: 50%; height: 50%; z-index: 9999; display: none;"
+        src="./instr.html">
+    </iframe>
     <script src="app.js" type="module"></script>
 </body>
 
