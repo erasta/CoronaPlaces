@@ -157,7 +157,8 @@ class App {
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors<br>' +
-                '<a href="https://github.com/erasta/CoronaPlaces">Opensource code</a> by Eran Geva.<br>'
+            '<a href="https://github.com/erasta/CoronaPlaces">Opensource code</a> by <a href="https://github.com/erasta">Eran Geva</a>, ' +
+            'assisted by <a href="https://kaplanopensource.co.il/">Lior Kaplan</a>'
         }).addTo(this.map);
 
         fetch(url)
