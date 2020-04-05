@@ -100,7 +100,7 @@ class App {
         });
         const eprob = document.getElementById('was-problem');
         eprob.style.color = this.wasProblem ? 'red' : 'green';
-        eprob.textContent = this.wasProblem ? 'זוהתה חשיפות אפשריות, הן מסומנות בעיגול אדום על המפה' : 'הכל בסדר, לא זוהו חשיפות';
+        eprob.textContent = this.wasProblem ? 'זוהו חשיפות אפשריות לקורונה, הן מסומנות בעיגול אדום על המפה' : 'הכל בסדר, לא זוהו חשיפות לקורונה';
     }
 
     processJson(json) {
@@ -137,7 +137,8 @@ class App {
         // document.getElementById("download-my-locations").addEventListener("click", () => downloadSingleKml());
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors<br><a href="https://github.com/erasta/CoronaPlaces">Opensource code</a> by Eran Geva'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors<br>' +
+                '<a href="https://github.com/erasta/CoronaPlaces">Opensource code</a> by Eran Geva.<br>'
         }).addTo(this.map);
 
         fetch(url)
