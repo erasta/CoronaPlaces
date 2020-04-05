@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
+    <script src="https://unpkg.com/jszip@3.3.0/dist/jszip.js"></script>
 
 </head>
 
@@ -32,7 +33,7 @@
         <label id="date-to-show">טוען</label>
         <br>
         <label for="file-google-json">העלו קובץ היסטורית מיקומים: </label>
-        <input type="file" id="file-google-json" name="file-google-json" accept=".json" />
+        <input type="file" id="file-google-json" name="file-google-json" accept=".json,.zip" />
         <br>
         <button
             onclick="st = document.getElementById('instructions').style; st.display = st.display === 'none' ? '' : 'none'">
